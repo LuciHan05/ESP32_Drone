@@ -1,2 +1,12 @@
 # ESP32_Drone
-A fully custom-built drone project. Documenting the complete engineering journey from frame assembly and hardware wiring to ESC calibration and flight testing.
+
+# 🚁 Custom Engineered Drone
+
+Welcome to the repository for my custom-built drone! This project represents a complete hardware and software integration journey. Instead of just buying a pre-built quadcopter, I decided to build, wire, and tune everything from scratch. 
+
+Here you will find the complete documentation of the build process, including:
+* 🛠️ **Hardware Assembly:** Frame selection, motor mounting, and soldering.
+* ⚡ **Electronics & Wiring:** Integrating the flight controller, ESCs, and receiver.
+* 💻 **Firmware & Tuning:** Calibration and software setup for stable flight.
+
+📖 **Full Documentation & Build Log:** [Insert Link to your Next.js Website Here]

@@ -18,7 +18,7 @@ export type ProjectStep = {
   resources?: { label: string; href: string }[];
 };
 
-// Edit this file to personalize the entire portfolio. No environment variables needed.
+// Website identity and initial content. Published content is managed at /admin.
 export const project = {
   name: "ESP32_DRONE",
   author: "LuciHan05",

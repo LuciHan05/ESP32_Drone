@@ -3,7 +3,7 @@
 import { Icon } from "./icons";
 
 /** Native details still works without JS; this only closes it after navigation. */
-export function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
+export function MobileMenu({ links, active }: { links: { href: string; label: string }[]; active?: string }) {
   return <details className="mobile-menu"
     onClick={(event) => {
       if (event.target instanceof Element && event.target.closest("a")) event.currentTarget.open = false;
@@ -19,6 +19,6 @@ export function MobileMenu({ links }: { links: { href: string; label: string }[]
     }}
   >
     <summary aria-label="Meniu de navigare"><span>Meniu</span><Icon name="plus" /></summary>
-    <nav aria-label="Navigare mobilă">{links.map(link => <a key={link.href} href={link.href}>{link.label}</a>)}</nav>
+    <nav aria-label="Navigare mobilă">{links.map(link => <a key={link.href} href={link.href} aria-current={active === link.href ? "page" : undefined}>{link.label}</a>)}</nav>
   </details>;
 }

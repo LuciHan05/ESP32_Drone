@@ -1,4 +1,5 @@
 import { project } from "@/data/project";
+import Link from "next/link";
 import { Icon } from "./icons";
 
 export function Footer() {
@@ -12,7 +13,7 @@ export function Footer() {
           {project.portfolioUrl && <a className="text-link" href={project.portfolioUrl}>Portofoliul meu <Icon name="diagonal" /></a>}
         </div>
       </div>
-      <div className="footer-bottom"><a className="wordmark" href="#acasa">{project.name}<span className="brand-dot">.</span></a><span>Un jurnal de inginerie de {project.author}.</span><a href="#acasa">Înapoi sus ↑</a></div>
+      <div className="footer-bottom"><Link className="wordmark" href="/">{project.name}<span className="brand-dot">.</span></Link><span>Un jurnal de inginerie de {project.author}.</span><a href="/admin">Administrare</a><a href="#continut">Înapoi sus ↑</a></div>
     </div>
   </footer>;
 }

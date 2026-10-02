@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Icon } from "./icons";
 import { MobileMenu } from "./mobile-menu";
 
-const links = [{ href: "/", label: "Prezentare" }, { href: "/componente", label: "Componente" }, { href: "/constructie", label: "Construcție" }, { href: "/cod", label: "Cod" }, { href: "/galerie", label: "Galerie" }];
+const links = [{ href: "/", label: "Prezentare" }, { href: "/componente", label: "Componente" }, { href: "/constructie", label: "Construcție" }, { href: "/cod", label: "Cod" }, { href: "/galerie", label: "Galerie" }, { href: "/video", label: "Video" }];
 
 export function Header({ active = "/" }: { active?: string }) {
   return <header className="site-header">

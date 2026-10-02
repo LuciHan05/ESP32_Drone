@@ -29,6 +29,7 @@ Fără variabile Supabase sunt afișate datele inițiale, iar administrarea expl
 - `/constructie` — pași, fotografii și documentație.
 - `/cod` — firmware, copiere, descărcare și link extern opțional.
 - `/galerie` — fotografiile dronei, componentelor și etapelor.
+- `/video` — filmări cu pilotarea dronei, după Galerie în navigare.
 - `/admin` — autentificare și editor pentru administrator.
 
 ## Adaugă fotografii
@@ -44,6 +45,12 @@ JPEG, PNG și WebP; pentru HEIC, exportă în JPEG. Maximum 8 fotografii per sel
 Eliminarea din editor scoate fotografia din site după publicare; fișierul rămâne în Storage pentru recuperare. Și încărcările abandonate rămân în Storage. Bucket-ul este public: imaginile încărcate pot fi văzute de oricine cunoaște adresa lor.
 
 Modificările nesalvate rămân doar în pagina deschisă. Editorul avertizează la închidere și detectează conflictele dintre publicările din două pagini.
+
+## Adaugă filmări
+
+Rulează migrarea `supabase/migrations/20261002112819_add_drone_videos.sql` în proiectul Supabase existent, apoi folosește **Administrare → Video → Adaugă o filmare**. Completează titlul și descrierea și apasă **Publică modificările**.
+
+MP4/WebM, maximum 50 MB per fișier și 12 filmări. Încărcarea merge direct în Supabase, în bucăți, cu progres, anulare și reîncercări automate la întreruperi scurte. Playerul nu descarcă filmările înainte de redare (`preload="none"`) și nu pornește automat. Detalii în [configurarea administrării](docs/ADMIN_SETUP.md#6-activează-și-încarcă-filmări).
 
 ## Structură
 

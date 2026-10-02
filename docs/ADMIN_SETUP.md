@@ -1,4 +1,4 @@
-# Încarcă fotografii pe ESP32_DRONE
+# Încarcă fotografii și filmări pe ESP32_DRONE
 
 Configurarea de mai jos se face o singură dată. După aceea folosești `/admin` pentru fotografii, componente, etape și cod.
 
@@ -53,12 +53,31 @@ Repornește `npm run dev`. Deschide `http://localhost:3000/admin` și autentific
 
 Pentru poze ale componentelor sau etapelor de construcție, selectează secțiunea respectivă și deschide elementul dorit. În **Cod**, poți publica fișierele de firmware sau un link extern. Acestea sunt salvate în Supabase, nu în repository-ul site-ului.
 
+## 6. Activează și încarcă filmări
+
+1. În **Esp32Drone → SQL Editor → New query**, rulează conținutul fișierului `supabase/migrations/20261002112819_add_drone_videos.sql`. Creează bucket-ul public `drone-videos`, cu acces de încărcare doar pentru administrator.
+2. În site, deschide **Administrare → Video → Adaugă o filmare**.
+3. Selectează un MP4 sau WebM de maximum **50 MB**. Pentru compatibilitate pe mobil, recomandarea de export este **MP4, H.264/AAC, 1080p**. Site-ul nu convertește codecurile video.
+4. Așteaptă finalizarea încărcării. Progresul este afișat, iar întreruperile scurte sunt reîncercate automat cât timp pagina rămâne deschisă. Poți anula încărcarea.
+5. Deschide cardul filmării, completează titlul și descrierea. Dacă există explicații vorbite, adaugă și transcrierea în descriere.
+6. Apasă **Publică modificările**, apoi verifică pagina **Video**, după **Galerie** în meniu.
+
+Sunt permise maximum 12 filmări. Fișierele merg direct în Supabase prin upload TUS în bucăți, evitând limita de corp a funcțiilor Vercel. Serverul verifică sesiunea și rolul administratorului înainte să emită un token temporar pentru un singur fișier. Playerul folosește `preload="none"`, fără autoplay, astfel încât deschiderea paginii să nu descarce automat filmările.
+
+Conținutul publicat anterior rămâne compatibil: absența câmpului `videos` se interpretează ca listă goală. Nu trebuie resalvate fotografiile sau textele existente. Pentru filmări nu sunt necesare variabile de mediu noi.
+
+Eliminarea unui card și publicarea îl scot de pe site; fișierul rămâne în Storage. Poate fi șters manual ulterior din Supabase. Bucket-ul este public: un fișier încărcat este accesibil prin URL chiar înainte de publicarea cardului.
+
+Referințe upload: [TUS și tokenuri semnate](https://supabase.com/docs/guides/storage/uploads/resumable-uploads), [limitele fișierelor](https://supabase.com/docs/guides/storage/uploads/file-limits).
+
 ## Dacă apare o eroare
 
 - „Conectarea la Supabase este necesară”: verifică variabilele de mediu și repornește serverul / fă redeploy.
 - „Verifică migrarea Supabase”: rulează scriptul SQL în proiectul corect.
 - „Acest cont nu are acces de administrare”: verifică UID-ul și pasul 2.6.
 - Încărcarea eșuează: verifică formatul, dimensiunea, spațiul Storage și bucket-ul `drone-images`.
+- Încărcarea video nu este disponibilă: rulează migrarea de la pasul 6 și verifică `drone-videos`. Limita globală din Storage trebuie să permită dimensiunea fișierului (până la 50 MB pe planul Free).
+- Filmarea nu se redă: reexportă în MP4 cu H.264/AAC; extensia MP4 singură nu garantează un codec compatibil.
 - Conflict la publicare: păstrează textele importante, apoi încarcă ultima versiune în editor.
 
 Referințe: [Next.js și Supabase](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs), [Storage](https://supabase.com/docs/guides/storage), [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).

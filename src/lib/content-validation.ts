@@ -1,4 +1,5 @@
-import type { CodeFile, ConstructionStep, ContentSnapshot, DroneComponent, GalleryImage, SiteContent } from "./content-types";
+import type { CodeFile, ConstructionStep, ContentSnapshot, DroneComponent, DroneVideo, GalleryImage, SiteContent } from "./content-types";
+import { isSafeVideoSource, MAX_VIDEOS, videoExtension } from "./video";
 
 export class ContentValidationError extends Error {}
 
@@ -135,5 +136,15 @@ export function parseSiteContent(value: unknown, supabaseUrl?: string): SiteCont
   }), "Cod");
   const firmwareUrl = content.firmwareUrl == null || content.firmwareUrl === "" ? null : string(content.firmwareUrl, "Link firmware", 2048, true);
   if (firmwareUrl && (!isSafeResourceUrl(firmwareUrl) || !firmwareUrl.startsWith("https://"))) fail("Link firmware", "link HTTPS necesar");
-  return { gallery, heroImageId, components, steps, codeFiles, firmwareUrl };
+  // Older publications have no videos field. Do not replace existing content.
+  const videos = unique(list(content.videos === undefined ? [] : content.videos, "Video", MAX_VIDEOS, (value, path): DroneVideo => {
+    const item = object(value, path);
+    const src = string(item.src, `${path}.src`, 2048, true);
+    const mimeType = string(item.mimeType, `${path}.mimeType`, 40);
+    const extension = videoExtension(mimeType);
+    if (!extension || !src.endsWith(`.${extension}`) || !isSafeVideoSource(src, supabaseUrl)) fail(path, "filmare MP4 sau WebM încărcată în acest proiect necesară");
+    return { id: id(item.id, `${path}.id`), src, mimeType: mimeType as DroneVideo["mimeType"],
+      title: string(item.title, `${path}.title`, 200, true), description: string(item.description, `${path}.description`, 6000) };
+  }), "Video");
+  return { gallery, heroImageId, components, steps, codeFiles, firmwareUrl, videos };
 }

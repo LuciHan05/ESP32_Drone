@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import type { CodeFile, ConstructionStep, ContentSnapshot, DroneComponent, GalleryImage, SiteContent } from "@/lib/content-types";
+import type { CodeFile, ConstructionStep, ContentSnapshot, DroneComponent, DroneVideo, GalleryImage, SiteContent, VideoUploadTicket } from "@/lib/content-types";
 import { ImagesEditor } from "./images-editor";
 import { prepareImage } from "./image-upload";
+import { checkVideo, uploadVideo } from "./video-upload";
+import { MAX_VIDEOS } from "@/lib/video";
+import { VideoPlayer } from "../video-player";
 
-type Tab = "gallery" | "components" | "steps" | "codeFiles";
+type Tab = "gallery" | "components" | "steps" | "codeFiles" | "videos";
 const TABS: { id: Tab; label: string; number: string }[] = [
   { id: "gallery", label: "Fotografii dronă", number: "01" },
   { id: "components", label: "Componente", number: "02" },
   { id: "steps", label: "Etape", number: "03" },
   { id: "codeFiles", label: "Cod", number: "04" },
+  { id: "videos", label: "Video", number: "05" },
 ];
 
 class RequestError extends Error {
@@ -42,6 +46,9 @@ export function AdminWorkspace() {
   const [notice, setNotice] = useState("");
   const [conflict, setConflict] = useState(false);
   const lock = useRef(false);
+  const videoAbort = useRef<AbortController | null>(null);
+  const [videoProgress, setVideoProgress] = useState<number | null>(null);
+  useEffect(() => () => videoAbort.current?.abort(), []);
 
   useEffect(() => {
     let active = true;
@@ -173,8 +180,35 @@ export function AdminWorkspace() {
   function updateCode(id: string, changes: Partial<CodeFile>) {
     edit((current) => ({ ...current, codeFiles: current.codeFiles.map((item) => item.id === id ? { ...item, ...changes } : item) }));
   }
-  function removeItem(key: "components" | "steps" | "codeFiles", id: string, noun: string) {
+  function removeItem(key: "components" | "steps" | "codeFiles" | "videos", id: string, noun: string) {
     if (window.confirm(`Elimini ${noun}? Schimbarea devine publică după salvare.`)) edit((current) => ({ ...current, [key]: current[key].filter((item) => item.id !== id) }));
+  }
+
+  function updateVideo(id: string, changes: Partial<DroneVideo>) {
+    edit((current) => ({ ...current, videos: current.videos.map(item => item.id === id ? { ...item, ...changes } : item) }));
+  }
+
+  async function addVideo(file: File) {
+    if (lock.current || !user || !content) return;
+    if (content.videos.length >= MAX_VIDEOS) { setError(`Poți publica maximum ${MAX_VIDEOS} filmări.`); return; }
+    lock.current = true;
+    const controller = new AbortController();
+    videoAbort.current = controller;
+    setError(""); setNotice(""); setBusy("Se pregătește filmarea…"); setVideoProgress(0);
+    try {
+      await checkVideo(file);
+      const ticket = await request<VideoUploadTicket>("/api/admin/video-upload", {
+        method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
+        body: JSON.stringify({ name: file.name, type: file.type, size: file.size }),
+      });
+      setBusy("Se încarcă filmarea… Păstrează pagina deschisă.");
+      await uploadVideo(file, ticket, controller.signal, setVideoProgress);
+      edit(current => ({ ...current, videos: [...current.videos, ticket.video] }));
+      setNotice("Filmarea a fost încărcată. Completează titlul și descrierea, apoi apasă „Publică modificările”.");
+    } catch (cause) {
+      if (controller.signal.aborted) setNotice("Încărcarea a fost anulată. Filmarea nu a fost adăugată în pagină.");
+      else reportError(cause);
+    } finally { lock.current = false; videoAbort.current = null; setBusy(null); setVideoProgress(null); }
   }
 
   async function importCode(id: string, file: File) {
@@ -202,6 +236,7 @@ export function AdminWorkspace() {
         {notice && <div className="admin-message admin-message-success">{notice}</div>}
         {busy && <div className="admin-message admin-message-progress" role="status"><span className="admin-progress-mark" aria-hidden="true" />{busy}</div>}
       </div>
+      {videoProgress !== null && <div className="admin-video-progress"><label>Încărcare video: {videoProgress}%<progress max={100} value={videoProgress} /></label><button type="button" className="admin-button" onClick={() => videoAbort.current?.abort()}>Anulează încărcarea</button></div>}
       {!user && <LoginForm pending={!!busy} onLogin={login} reauth={!!content} />}
       {user && !content && <section className="admin-entry"><h1>Conținutul nu a fost încărcat.</h1><p className="admin-intro">Ești autentificat ca {user}. Poți reîncerca fără să pierzi sesiunea.</p><button className="admin-button admin-button-primary" disabled={disabled} onClick={() => void reloadContent()}>Reîncearcă</button><button className="admin-button admin-button-quiet" disabled={disabled} onClick={() => void logout()}>Deconectare</button></section>}
       {content && <div className="admin-workspace">
@@ -255,6 +290,19 @@ export function AdminWorkspace() {
               </div>
             </details>)}</div>
             <button className="admin-button admin-add-button" onClick={() => edit((current) => ({ ...current, steps: [...current.steps, { id: newId("step"), title: "Etapă nouă", category: "CONSTRUCȚIE", summary: "", status: "planned", documentation: [""], imageCaption: "", challenge: "", nextToDocument: "", images: [] }] }))}><span aria-hidden="true">＋</span> Adaugă o etapă</button>
+          </div>}
+          {tab === "videos" && <div>
+            <SectionIntro title="Filmările cu drona." description="Încarcă videoclipuri cu pilotarea și testele de zbor. Ele apar în pagina Video după publicare." />
+            <label className="admin-field"><span>Adaugă o filmare</span><input type="file" accept="video/mp4,video/webm,.mp4,.webm" disabled={disabled || content.videos.length >= MAX_VIDEOS} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ""; if (file) void addVideo(file); }} /><small>MP4 sau WebM, maximum 50 MB per filmare. Recomandat: MP4, H.264/AAC, 1080p. Maximum {MAX_VIDEOS} filmări.</small></label>
+            {!content.videos.length && <div className="admin-empty-state"><h3>Prima filmare cu drona.</h3><p>Alege un fișier de pe telefon sau calculator, apoi adaugă titlul și explicațiile.</p></div>}
+            <div className="admin-card-list">{content.videos.map((video, index) => <details className="admin-item-card" key={video.id}>
+              <summary><span className="admin-item-number">{String(index + 1).padStart(2, "0")}</span><span><strong>{video.title}</strong><small>{video.mimeType === "video/mp4" ? "MP4" : "WebM"}</small></span><span className="admin-expand" aria-hidden="true">＋</span></summary>
+              <div className="admin-card-body"><VideoPlayer video={video} />
+                <Field label="Titlul filmării" value={video.title} maxLength={200} onChange={title => updateVideo(video.id, { title })} />
+                <Field label="Descrierea filmării" value={video.description} maxLength={6000} multiline onChange={description => updateVideo(video.id, { description })}><small>Descrie testul și ce se vede în filmare. Dacă vorbești în video, poți adăuga aici și transcrierea explicațiilor.</small></Field>
+                <div className="admin-item-actions"><button className="admin-button" disabled={disabled || index === 0} onClick={() => edit(current => { const videos = [...current.videos]; [videos[index - 1], videos[index]] = [videos[index], videos[index - 1]]; return { ...current, videos }; })}>↑ Mută mai sus</button><button className="admin-button" disabled={disabled || index === content.videos.length - 1} onClick={() => edit(current => { const videos = [...current.videos]; [videos[index], videos[index + 1]] = [videos[index + 1], videos[index]]; return { ...current, videos }; })}>↓ Mută mai jos</button><button className="admin-button admin-button-danger" onClick={() => removeItem("videos", video.id, "filmarea din pagină")}>Elimină filmarea</button></div>
+              </div>
+            </details>)}</div>
           </div>}
           {tab === "codeFiles" && <div>
             <SectionIntro title="Codul din spatele zborului." description="Publică fișiere și explicații. Codul este afișat ca text și nu este executat de site." />

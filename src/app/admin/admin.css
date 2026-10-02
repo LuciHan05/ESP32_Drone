@@ -63,7 +63,7 @@
 .admin-toolbar > button { flex-shrink: 0; }
 .admin-conflict { margin-bottom: 28px; background: #fff0e8; padding: 18px 22px; border: 1px solid #dfb7a9; border-radius: 4px; }
 .admin-conflict p { font-size: 14px; line-height: 1.7; margin: 0 0 14px; }
-.admin-nav { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); margin-bottom: 36px; gap: 8px; }
+.admin-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 1px solid var(--line); margin-bottom: 36px; gap: 8px; }
 .admin-nav button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; padding: 17px 14px; min-height: 56px; text-align: left; font-size: 14px; color: var(--muted); background: transparent; border: 0; border-bottom: 2px solid transparent; }
 .admin-nav button:hover { background: #eeefe7; }
 .admin-nav button.is-active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -179,3 +179,6 @@
   .admin-item-actions .admin-button-danger { margin-left: 0; width: 100%; }
   .admin-code-input textarea { font-size: 13px; }
 }
+.admin-video-progress { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.admin-video-progress label { flex: 1; min-width: 180px; font-size: 14px; }
+.admin-video-progress progress { display: block; width: 100%; margin-top: 8px; accent-color: var(--accent); }

@@ -20,7 +20,7 @@ export async function getContentSnapshot(client: SupabaseClient): Promise<Conten
 
 const getCachedContent = unstable_cache(
   async () => (await getContentSnapshot(createPublicClient())).content,
-  ["drone-public-content-v1"],
+  ["drone-public-content-v2"],
   { tags: ["site-content"], revalidate: 300 },
 );
 
@@ -40,6 +40,6 @@ export async function saveContent(client: SupabaseClient, snapshot: ContentSnaps
   if (error) throw new ApiError(503, "Publicarea nu a reușit. Verifică politicile Supabase și încearcă din nou.");
   if (!data) throw new ApiError(409, "Conținutul a fost modificat în altă sesiune. Copiază schimbările tale și reîncarcă versiunea publicată.");
   revalidateTag("site-content", { expire: 0 });
-  for (const path of ["/", "/componente", "/constructie", "/cod", "/galerie"]) revalidatePath(path);
+  for (const path of ["/", "/componente", "/constructie", "/cod", "/galerie", "/video"]) revalidatePath(path);
   return { content: snapshot.content, revision: data.revision };
 }

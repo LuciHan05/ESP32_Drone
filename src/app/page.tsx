@@ -20,7 +20,7 @@ export default async function Home() {
       <section id="acasa" className="hero container" aria-labelledby="hero-title">
         <div className="hero-copy">
           <div className="eyebrow hero-eyebrow"><span className="tiny-cross">+</span> PROIECT PERSONAL / INGINERIE & COD</div>
-          <h1 id="hero-title">De la idee<br />la <span>primul zbor.</span></h1>
+          <h1 id="hero-title">5Inch<br /><span>ESP32 Drone</span></h1>
           <p className="hero-description">{project.description}</p>
           <div className="hero-actions"><a className="button button-orange" href="#jurnal">Explorează construcția <Icon name="arrow" /></a><a className="text-link" href="#proiect">Despre proiect <Icon name="diagonal" width="16" height="16" /></a></div>
           <div className="hero-note"><span className="status-dot" /><span>Prototip funcțional <span className="note-separator">/</span> Testare & reglaje</span></div>

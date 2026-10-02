@@ -47,7 +47,7 @@ export default async function Home() {
 
       <section id="proiect" className="container overview section-space" aria-labelledby="overview-title">
         <div><p className="section-label"><span>01</span> DESPRE PROIECT</p><h2 id="overview-title">Nu doar o dronă.<br /><span>Un sistem construit<br className="desktop-break" /> de la zero.</span></h2></div>
-        <div className="overview-copy"><p className="lead">Cum transformi câteva componente și multe linii de cod într-un sistem care se poate ridica de la sol?</p><p>Acesta este jurnalul meu de răspunsuri, teste și iterații. Am construit un quadcopter în jurul unui ESP32, cu citirea senzorilor, comunicația wireless și stabilizarea implementate în firmware propriu.</p><p>Proiectul a ajuns la primele desprinderi de sol. Urmează reglajele de stabilitate, documentarea rezultatelor și explorarea unei camere la bord.</p><div className="tags"><span>Embedded systems</span><span>Electronică</span><span>Control automat</span><span>DIY</span></div></div>
+        <div className="overview-copy"><p className="lead">Cum transformi câteva componente și multe linii de cod într-un sistem care se poate ridica de la sol?</p><p>Acesta este jurnalul meu de răspunsuri, teste și iterații. Am construit un quadcopter în jurul unui ESP32, cu citirea senzorilor, comunicația wireless și stabilizarea implementate în firmware propriu.</p><div className="tags"><span>Embedded systems</span><span>Electronică</span><span>Control automat</span><span>DIY</span></div></div>
       </section>
 
       <section id="specificatii" className="specs-section" aria-labelledby="specs-title"><div className="container section-space">

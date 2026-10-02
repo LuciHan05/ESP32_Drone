@@ -58,7 +58,7 @@ export default async function Home() {
       </div></section>
 
       <section id="jurnal" className="container section-space journal" aria-labelledby="journal-title">
-        <div className="section-heading"><div><p className="section-label"><span>03</span> JURNAL DE CONSTRUCȚIE</p><h2 id="journal-title">Pas cu pas, mai aproape de zbor.</h2></div><div className="journal-count"><strong className="mono">{String(steps.length).padStart(2,"0")}</strong><span>etape de urmărit<br />de la cadru la cameră</span></div></div>
+        <div className="section-heading"><div><p className="section-label"><span>03</span> JURNAL DE CONSTRUCȚIE</p><h2 id="journal-title">Pașii parcurși până la zbor</h2></div><div className="journal-count"><strong className="mono">{String(steps.length).padStart(2,"0")}</strong><span>etape de urmărit<br />de la cadru la cameră</span></div></div>
         <p className="journal-intro">Deciziile, provocările și ce am învățat pe parcurs. Deschide fiecare etapă pentru detalii.</p>
         <Timeline steps={steps.slice(0, 2)} />
         <a className="button button-dark journal-more" href="/constructie">Vezi jurnalul complet <Icon name="arrow" /></a>

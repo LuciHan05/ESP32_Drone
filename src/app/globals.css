@@ -211,7 +211,7 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
   .mobile-menu { display: block; }
   .mobile-menu summary { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; list-style: none; font-size: 12px; }
   .mobile-menu[open] summary > svg { transform: rotate(45deg); }
-  .mobile-menu nav { position: absolute; top: 67px; right: 0; left: 0; display: flex; flex-direction: column; padding: 12px 20px; background: var(--paper); border-block: 1px solid var(--line); box-shadow: 0 10px 20px #2428200a; }
+  .mobile-menu nav { position: absolute; top: 100%; right: 0; left: 0; display: flex; flex-direction: column; max-height: calc(100svh - 88px); overflow-y: auto; padding: 12px 20px; background: var(--paper); border-block: 1px solid var(--line); box-shadow: 0 10px 20px #2428200a; }
   .mobile-menu nav a { display: flex; align-items: center; min-height: 48px; font-size: 14px; }
   .mobile-menu nav a:hover { color: var(--accent); }
   .hero { display: flex; flex-direction: column; align-items: stretch; gap: 32px; padding-block: 34px; }
@@ -268,11 +268,12 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 }
 
 /* Public documentation pages */
-.video-collection { display: grid; gap: 48px; max-width: 1040px; margin-inline: auto; }
+.video-collection { display: grid; gap: 48px; max-width: 420px; margin-inline: auto; }
 .video-card { min-width: 0; }
 .video-heading { margin-bottom: 20px; }
 .video-heading h2 { font-size: clamp(24px, 3vw, 34px); margin-top: 10px; overflow-wrap: anywhere; }
-.video-player video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #000; border-radius: 6px; }
+.video-player { width: min(100%, 420px, 45svh); margin-inline: auto; }
+.video-player video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; background: #000; border-radius: 6px; }
 .video-player video:fullscreen { width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; border-radius: 0; }
 .video-player video:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .video-description, .video-error { font-size: 16px; line-height: 1.8; color: var(--muted); white-space: pre-line; overflow-wrap: anywhere; margin-top: 18px; }
@@ -282,7 +283,7 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
   .site-header .mobile-menu { display: block; margin-left: auto; }
   .mobile-menu summary { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; list-style: none; font-size: 14px; }
   .mobile-menu[open] summary > svg { transform: rotate(45deg); }
-  .mobile-menu nav { position: absolute; top: 75px; right: 0; left: 0; display: flex; flex-direction: column; padding: 12px 30px; background: var(--paper); border-block: 1px solid var(--line); box-shadow: 0 10px 20px #2428200a; }
+  .mobile-menu nav { position: absolute; top: 100%; right: 0; left: 0; display: flex; flex-direction: column; max-height: calc(100svh - 88px); overflow-y: auto; padding: 12px 30px; background: var(--paper); border-block: 1px solid var(--line); box-shadow: 0 10px 20px #2428200a; }
   .mobile-menu nav a { display: flex; align-items: center; min-height: 48px; font-size: 14px; }
 }
 .desktop-nav a[aria-current="page"], .mobile-menu a[aria-current="page"] { color: var(--accent); }

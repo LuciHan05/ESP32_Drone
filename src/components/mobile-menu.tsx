@@ -1,21 +1,27 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Icon } from "./icons";
 
-/** Native details still works without JS; this only closes it after navigation. */
+/** Native links navigate normally; dismiss only from outside the menu or with Escape. */
 export function MobileMenu({ links, active }: { links: { href: string; label: string }[]; active?: string }) {
-  return <details className="mobile-menu"
-    onClick={(event) => {
-      if (event.target instanceof Element && event.target.closest("a")) event.currentTarget.open = false;
-    }}
+  const menuRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      const menu = menuRef.current;
+      if (menu && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    return () => document.removeEventListener("pointerdown", closeOutside);
+  }, []);
+
+  return <details ref={menuRef} className="mobile-menu"
     onKeyDown={(event) => {
       if (event.key === "Escape") {
         event.currentTarget.open = false;
         event.currentTarget.querySelector("summary")?.focus();
       }
-    }}
-    onBlur={(event) => {
-      if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
     }}
   >
     <summary aria-label="Meniu de navigare"><span>Meniu</span><Icon name="plus" /></summary>

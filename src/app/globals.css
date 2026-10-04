@@ -139,8 +139,6 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 .step-detail-body p { margin: 0 0 12px; font-size: 12px; line-height: 1.8; color: var(--muted); }
 .step-detail-body h4 { font-size: 11px; font-weight: 600; margin: 0 0 5px; }
 .challenge { margin-top: 20px; padding-left: 14px; border-left: 2px solid #d88159; }
-.to-document { margin-top: 16px; padding: 13px; background: #f0f1e9; border-radius: 3px; }
-.to-document p { margin-bottom: 0; }
 .resource-links { padding: 0; list-style: none; }
 .resource-links a { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--accent); font-size: 12px; }
 .site-footer { border-top: 1px solid var(--line); background: #ecede4; }

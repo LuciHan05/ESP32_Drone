@@ -22,7 +22,6 @@ export function Timeline({ steps }: { steps: (ProjectStep & { images?: GalleryIm
               <div className="step-detail-body">
                 {step.documentation.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
                 <div className="challenge"><h4>Provocarea etapei</h4><p>{step.challenge}</p></div>
-                <div className="to-document"><h4>De adăugat în jurnal</h4><p>{step.nextToDocument}</p></div>
                 {step.resources && <ul className="resource-links">{step.resources.map((resource) => <li key={resource.href}><a href={resource.href}>{resource.label}<Icon name="diagonal" /></a></li>)}</ul>}
               </div>
             </details>

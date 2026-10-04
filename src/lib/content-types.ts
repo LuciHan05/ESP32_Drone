@@ -49,6 +49,7 @@ export type DroneVideo = {
 
 export type VideoUploadTicket = {
   endpoint: string;
+  apiKey: string;
   token: string;
   path: string;
   video: DroneVideo;

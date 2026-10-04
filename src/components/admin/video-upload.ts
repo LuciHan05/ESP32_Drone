@@ -18,15 +18,27 @@ export async function uploadVideo(file: File, ticket: VideoUploadTicket, signal:
     const finish = (error?: Error) => { signal.removeEventListener("abort", cancel); if (error) reject(error); else resolve(); };
     const upload = new Upload(file, {
       endpoint: ticket.endpoint,
-      headers: { "x-signature": ticket.token },
+      headers: { apikey: ticket.apiKey, "x-signature": ticket.token },
       chunkSize: 6 * 1024 * 1024,
       retryDelays: [0, 3000, 5000, 10000, 20000],
       uploadDataDuringCreation: true,
       storeFingerprintForResuming: false,
       metadata: { bucketName: VIDEO_BUCKET, objectName: ticket.path, contentType: file.type, cacheControl: "31536000" },
       onProgress: (sent, total) => onProgress(Math.min(99, Math.floor(sent / total * 100))),
-      // Do not surface provider messages that may contain the signed upload token.
-      onError: () => finish(new Error("Încărcarea nu s-a finalizat. Verifică conexiunea, limita de 50 MB și spațiul Supabase, apoi selectează din nou filmarea.")),
+      // Report only an HTTP status, never provider text/URLs containing tokens.
+      onError: (error) => {
+        const status = "originalResponse" in error ? error.originalResponse?.getStatus() : undefined;
+        const reason = status === 401 || status === 403
+          ? "Supabase a refuzat autorizarea transferului. Reîncarcă pagina și selectează din nou filmarea."
+          : status === 413
+            ? "Supabase a refuzat dimensiunea fișierului. Verifică limita proiectului și a spațiului drone-videos."
+            : status === 415
+              ? "Supabase nu acceptă formatul filmării. Folosește MP4 sau WebM."
+              : status === 429
+                ? "Sunt prea multe cereri. Așteaptă puțin și selectează din nou filmarea."
+                : "Încărcarea nu s-a finalizat. Verifică conexiunea și selectează din nou filmarea.";
+        finish(new Error(`${reason}${status ? ` (HTTP ${status})` : ""}`));
+      },
       onSuccess: () => { onProgress(100); finish(); },
     });
     function cancel() {

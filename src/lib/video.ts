@@ -2,6 +2,15 @@ export const VIDEO_BUCKET = "drone-videos";
 export const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
 export const MAX_VIDEOS = 12;
 
+/** Signed TUS uploads have a separate route from bearer-authenticated uploads. */
+export function getSignedVideoUploadEndpoint(supabaseUrl: string): string {
+  const origin = new URL(supabaseUrl);
+  if (/^[a-z0-9]+\.supabase\.co$/.test(origin.hostname)) {
+    origin.hostname = origin.hostname.replace(".supabase.co", ".storage.supabase.co");
+  }
+  return `${origin.origin}/storage/v1/upload/resumable/sign`;
+}
+
 export function videoExtension(mimeType: string): "mp4" | "webm" | null {
   return mimeType === "video/mp4" ? "mp4" : mimeType === "video/webm" ? "webm" : null;
 }

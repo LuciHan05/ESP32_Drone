@@ -42,6 +42,7 @@ export type ContentSnapshot = { content: SiteContent; revision: number };
 export type DroneVideo = {
   id: string;
   src: string;
+  posterSrc?: string;
   title: string;
   description: string;
   mimeType: "video/mp4" | "video/webm";

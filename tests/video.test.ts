@@ -43,6 +43,21 @@ test("video uploads reject empty, oversized and mismatched files", () => {
   assert.throws(() => validateVideoFile({ name: "test.mp4", type: "video/webm", size: 50 }));
 });
 
+test("video posters survive publication while legacy videos and unsafe sources are handled", () => {
+  const content = getDefaultContent();
+  const posterSrc = `${origin}/storage/v1/object/public/drone-images/user/poster.webp`;
+  const withPoster = { ...video, posterSrc };
+  assert.deepEqual(parseSiteContent({ ...content, videos: [withPoster] }, origin).videos, [withPoster]);
+  assert.deepEqual(parseSiteContent({ ...content, videos: [video] }, origin).videos, [video]);
+  for (const invalid of [
+    posterSrc.replace(origin, "https://attacker.test"), src, "javascript:alert(1)",
+    "data:image/png;base64,AAAA", "blob:https://site.test/preview", "/images/poster.svg",
+    posterSrc + "?token=secret", posterSrc.replace("/user/", "/user/%2e%2e/"), "", null,
+  ]) {
+    assert.throws(() => parseSiteContent({ ...content, videos: [{ ...video, posterSrc: invalid }] }, origin), /posterSrc/);
+  }
+});
+
 test("client checks reject renamed HTML and recognize container headers", async () => {
   await assert.rejects(() => checkVideo(new File(["<html>not video</html>"], "test.mp4", { type: "video/mp4" })));
   await assert.doesNotReject(() => checkVideo(new File([new Uint8Array([0,0,0,24,102,116,121,112,105,115,111,109])], "test.mp4", { type: "video/mp4" })));

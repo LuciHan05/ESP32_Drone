@@ -143,8 +143,14 @@ export function parseSiteContent(value: unknown, supabaseUrl?: string): SiteCont
     const mimeType = string(item.mimeType, `${path}.mimeType`, 40);
     const extension = videoExtension(mimeType);
     if (!extension || !src.endsWith(`.${extension}`) || !isSafeVideoSource(src, supabaseUrl)) fail(path, "filmare MP4 sau WebM încărcată în acest proiect necesară");
-    return { id: id(item.id, `${path}.id`), src, mimeType: mimeType as DroneVideo["mimeType"],
+    const result: DroneVideo = { id: id(item.id, `${path}.id`), src, mimeType: mimeType as DroneVideo["mimeType"],
       title: string(item.title, `${path}.title`, 200, true), description: string(item.description, `${path}.description`, 6000) };
+    if (item.posterSrc !== undefined) {
+      const posterSrc = string(item.posterSrc, `${path}.posterSrc`, 2048, true);
+      if (!isSafeImageSource(posterSrc, supabaseUrl)) fail(`${path}.posterSrc`, "imagine locală sau încărcată în acest proiect necesară");
+      result.posterSrc = posterSrc;
+    }
+    return result;
   }), "Video");
   return { gallery, heroImageId, components, steps, codeFiles, firmwareUrl, videos };
 }

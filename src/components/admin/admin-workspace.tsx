@@ -6,6 +6,7 @@ import { ImagesEditor } from "./images-editor";
 import { prepareImage } from "./image-upload";
 import { checkVideo, uploadVideo } from "./video-upload";
 import { MAX_VIDEOS } from "@/lib/video";
+import { createVideoPoster } from "@/lib/video-poster";
 import { VideoPlayer } from "../video-player";
 
 type Tab = "gallery" | "components" | "steps" | "codeFiles" | "videos";
@@ -203,7 +204,22 @@ export function AdminWorkspace() {
       });
       setBusy("Se încarcă filmarea… Păstrează pagina deschisă.");
       await uploadVideo(file, ticket, controller.signal, setVideoProgress);
-      edit(current => ({ ...current, videos: [...current.videos, ticket.video] }));
+      const uploadedVideo = { ...ticket.video };
+      let previewUrl: string | undefined;
+      try {
+        setBusy("Se pregătește imaginea de previzualizare…");
+        previewUrl = URL.createObjectURL(file);
+        const poster = await createVideoPoster(previewUrl, controller.signal);
+        const form = new FormData();
+        form.append("file", poster, `video-poster.${poster.type === "image/webp" ? "webp" : "png"}`);
+        const image = await request<GalleryImage>("/api/admin/upload", { method: "POST", body: form, signal: controller.signal });
+        uploadedVideo.posterSrc = image.src;
+      } catch {
+        // A missing preview must not discard a successfully uploaded film.
+        // Older/unsupported clips still use the public player's preview fallback.
+      } finally { if (previewUrl) URL.revokeObjectURL(previewUrl); }
+      if (controller.signal.aborted) throw new DOMException("Încărcare anulată", "AbortError");
+      edit(current => ({ ...current, videos: [...current.videos, uploadedVideo] }));
       setNotice("Filmarea a fost încărcată. Completează titlul și descrierea, apoi apasă „Publică modificările”.");
     } catch (cause) {
       if (controller.signal.aborted) setNotice("Încărcarea a fost anulată. Filmarea nu a fost adăugată în pagină.");

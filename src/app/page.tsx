@@ -3,7 +3,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { DroneIllustration } from "@/components/drone-illustration";
 import { Icon } from "@/components/icons";
-import { Timeline } from "@/components/timeline";
+import { ComponentCollection } from "@/components/component-collection";
 import { project, software } from "@/data/project";
 import { getPublicContent } from "@/lib/server/content";
 
@@ -12,7 +12,6 @@ export const revalidate = 300;
 export default async function Home() {
   const content = await getPublicContent();
   const hardware = content.components;
-  const steps = content.steps;
   const heroMedia = content.gallery.find(image => image.id === content.heroImageId) ?? project.heroMedia;
   return <>
     <Header />
@@ -22,7 +21,7 @@ export default async function Home() {
           <div className="eyebrow hero-eyebrow"><span className="tiny-cross">+</span> PROIECT PERSONAL / INGINERIE & COD</div>
           <h1 id="hero-title"><span>Esp32 Drone</span></h1>
           <p className="hero-description">{project.description}</p>
-          <div className="hero-actions"><a className="button button-orange" href="#jurnal">Explorează construcția <Icon name="arrow" /></a><a className="text-link" href="#proiect">Despre proiect <Icon name="diagonal" width="16" height="16" /></a></div>
+          <div className="hero-actions"><a className="button button-orange" href="#componente">Explorează componentele <Icon name="arrow" /></a><a className="text-link" href="#proiect">Despre proiect <Icon name="diagonal" width="16" height="16" /></a></div>
           <div className="hero-note"><span className="status-dot" /><span>Prototip funcțional <span className="note-separator">/</span> Testare & reglaje</span></div>
         </div>
         <figure className="hero-visual">
@@ -57,11 +56,11 @@ export default async function Home() {
         <div className="signal-flow"><span className="eyebrow">DE LA COMANDĂ LA MIȘCARE</span><ol>{["Telecomandă", "ESP-NOW", "ESP32 + PID", "ESC-uri", "Motoare"].map((label,index) => <li key={label}>{index > 0 && <Icon name="arrow" width="16" height="16" />}<span>{label}</span></li>)}</ol></div>
       </div></section>
 
-      <section id="jurnal" className="container section-space journal" aria-labelledby="journal-title">
-        <div className="section-heading"><div><p className="section-label"><span>03</span> JURNAL DE CONSTRUCȚIE</p><h2 id="journal-title">Pașii parcurși până la zbor</h2></div><div className="journal-count"><strong className="mono">{String(steps.length).padStart(2,"0")}</strong><span>etape de urmărit<br />de la cadru la cameră</span></div></div>
-        <p className="journal-intro">Deciziile, provocările și ce am învățat pe parcurs. Deschide fiecare etapă pentru detalii.</p>
-        <Timeline steps={steps.slice(0, 2)} />
-        <a className="button button-dark journal-more" href="/constructie">Vezi jurnalul complet <Icon name="arrow" /></a>
+      <section id="componente" className="container section-space components-showcase" aria-labelledby="components-title">
+        <div className="section-heading"><div><p className="section-label"><span>03</span> COMPONENTELE DRONEI</p><h2 id="components-title">Componentele dronei.</h2></div><div className="components-count"><strong className="mono">{String(hardware.length).padStart(2,"0")}</strong><span>componente<br />documentate</span></div></div>
+        <p className="components-intro">Piesele proiectului, specificațiile și fotografiile lor.</p>
+        <ComponentCollection components={hardware} headingLevel={3} />
+        <a className="button button-dark components-more" href="/componente">Deschide pagina componentelor <Icon name="arrow" /></a>
       </section>
     </main>
     <Footer />

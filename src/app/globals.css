@@ -101,11 +101,11 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 .signal-flow ol { display: flex; flex-wrap: wrap; gap: 18px; list-style: none; padding: 0; margin: 0; }
 .signal-flow li { display: flex; align-items: center; gap: 18px; font-family: "Courier New", monospace; font-size: 11px; }
 .signal-flow svg { color: #8b9280; }
-.journal-count { display: flex; align-items: center; gap: 13px; }
-.journal-count strong { font-size: 36px; line-height: 1; font-weight: 400; color: var(--accent); }
-.journal-count > span { font-size: 11px; color: var(--muted); line-height: 1.6; }
-.journal .section-heading { margin-bottom: 20px; }
-.journal-intro { font-size: 14px; color: var(--muted); margin: 0 0 40px; line-height: 1.7; }
+.components-count { display: flex; align-items: center; gap: 13px; }
+.components-count strong { font-size: 36px; line-height: 1; font-weight: 400; color: var(--accent); }
+.components-count > span { font-size: 11px; color: var(--muted); line-height: 1.6; }
+.components-showcase .section-heading { margin-bottom: 20px; }
+.components-intro { font-size: 14px; color: var(--muted); margin: 0 0 40px; line-height: 1.7; }
 .timeline { list-style: none; margin: 0; padding: 0; }
 .timeline-item { position: relative; padding-left: 64px; padding-bottom: 28px; scroll-margin-top: 104px; }
 .timeline-item::before { content: ""; position: absolute; left: 18px; top: 36px; bottom: 0; width: 1px; background: #d2d7c9; }
@@ -197,7 +197,7 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
   .timeline-item { padding-left: 49px; }
   .step-content { grid-template-columns: .8fr 1.2fr; gap: 20px; padding: 20px; }
   .step-copy h3 { font-size: 22px; }
-  .journal-count { display: none; }
+  .components-count { display: none; }
   .footer-main h2 { font-size: 28px; }
 }
 @media (max-width: 640px) {
@@ -295,7 +295,7 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 .project-directory p { font-size: 12px; line-height: 1.7; margin: 9px 0 0; color: var(--muted); }
 .directory-arrow { position: absolute; right: 18px; bottom: 56px; width: 15px; height: 15px; }
 .section-links { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
-.journal-more { margin-top: 28px; margin-left: 64px; }
+.components-more { margin-top: 28px; }
 .collection-page { padding-block: 38px 90px; }
 .collection-intro { max-width: 820px; margin-bottom: 44px; }
 .collection-back { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; color: var(--muted); margin-bottom: 30px; }
@@ -311,7 +311,7 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 .component-card-top > .mono { font-size: 11px; color: var(--accent); }
 .component-card-content { padding: 24px 22px; }
 .component-card-content .eyebrow { color: var(--muted); font-size: 10px; }
-.component-card-content h2 { font-size: 27px; letter-spacing: -.7px; margin: 12px 0; }
+.component-card-content h2, .component-card-content h3 { font-size: 27px; font-weight: 500; line-height: 1.17; letter-spacing: -.7px; margin: 12px 0; }
 .component-card-content p { font-size: 14px; line-height: 1.8; color: var(--muted); margin: 0; white-space: pre-line; }
 .component-photo-placeholder { margin: 0 20px 20px; min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #68705f; background: #eff0e8; border: 1px dashed #d4d9ca; font-size: 12px; }
 .component-card > .photo-grid { padding: 0 20px 20px; }
@@ -359,4 +359,4 @@ h2 { font-size: clamp(30px, 3vw, 43px); line-height: 1.17; letter-spacing: -1.6p
 button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 1100px) { .desktop-nav { gap: 20px; } .component-collection { grid-template-columns: repeat(2, minmax(0, 1fr)); } .project-directory > a { padding: 18px; } .project-directory h2 { font-size: 18px; } .code-file-heading { flex-direction: column; gap: 12px; } }
 @media (max-width: 800px) { .project-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); } .software-collection { grid-template-columns: repeat(2, minmax(0, 1fr)); } .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .desktop-nav { gap: 15px; } .header-inner { gap: 18px; } }
-@media (max-width: 640px) { .project-directory { gap: 12px; padding-top: 28px; } .project-directory > a { padding: 16px; } .project-directory h2 { font-size: 19px; } .project-directory p { font-size: 12px; } .directory-arrow { display: none; } .collection-page { padding-block: 22px 52px; } .collection-intro { margin-bottom: 30px; } .collection-intro h1 { font-size: 39px; letter-spacing: -1.8px; } .collection-back { margin-bottom: 24px; } .collection-meta { font-size: 12px; } .collection-meta > .mono { max-width: 45%; text-align: right; font-size: 9px; } .collection-meta h2 { font-size: 23px; } .component-collection { grid-template-columns: 1fr; gap: 20px; } .component-card-content p { font-size: 16px; } .photo-grid:not(.photo-grid-compact) { grid-template-columns: 1fr; } .software-collection { grid-template-columns: 1fr; } .software-collection p { font-size: 15px; } .journal-more { margin-left: 0; } .collection-empty { padding: 42px 20px; } .collection-empty h2 { font-size: 27px; } .code-file-heading h2 { font-size: 27px; } .code-disclosure pre { padding: 16px; font-size: 12px; } .code-disclosure summary { padding: 15px; flex-wrap: wrap; gap: 8px; } .footer-bottom { gap: 6px 14px; } }
+@media (max-width: 640px) { .project-directory { gap: 12px; padding-top: 28px; } .project-directory > a { padding: 16px; } .project-directory h2 { font-size: 19px; } .project-directory p { font-size: 12px; } .directory-arrow { display: none; } .collection-page { padding-block: 22px 52px; } .collection-intro { margin-bottom: 30px; } .collection-intro h1 { font-size: 39px; letter-spacing: -1.8px; } .collection-back { margin-bottom: 24px; } .collection-meta { font-size: 12px; } .collection-meta > .mono { max-width: 45%; text-align: right; font-size: 9px; } .collection-meta h2 { font-size: 23px; } .component-collection { grid-template-columns: 1fr; gap: 20px; } .component-card-content p { font-size: 16px; } .photo-grid:not(.photo-grid-compact) { grid-template-columns: 1fr; } .software-collection { grid-template-columns: 1fr; } .software-collection p { font-size: 15px; } .collection-empty { padding: 42px 20px; } .collection-empty h2 { font-size: 27px; } .code-file-heading h2 { font-size: 27px; } .code-disclosure pre { padding: 16px; font-size: 12px; } .code-disclosure summary { padding: 15px; flex-wrap: wrap; gap: 8px; } .footer-bottom { gap: 6px 14px; } }
